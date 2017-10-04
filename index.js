@@ -39,12 +39,10 @@ module.exports = class CityTimezones {
     if (country) {
       country = country.trim().toLowerCase();
       zone = this._findByCityAndCountry(city, country);
-      return zone.timezone;
+    } else {
+      zone = this._findByCity(city) || this._findByCountry(city);
     }
-
-    zone = this._findByCity(city) || this._findByCountry(city);
-    if (!zone) return '';
-    return zone.timezone;
+    return zone ? zone.timezone : '';
   }
 
   /**
@@ -87,7 +85,8 @@ module.exports = class CityTimezones {
    */
   _findByCityAndCountry(city, country) {
     return _.find(cities, item => {
-      return item.city.toLowerCase() === city && item.country.toLowerCase() === country;
+      const itemCountry = item.country.toLowerCase();
+      return item.city.toLowerCase() === city && itemCountry === country || itemCountry.startsWith(country);
     });
   }
 };

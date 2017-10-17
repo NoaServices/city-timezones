@@ -120,10 +120,17 @@ module.exports = function () {
   }, {
     key: '_findByCityAndCountry',
     value: function _findByCityAndCountry(city, country) {
-      return _.find(cities, function (item) {
+      var zone = _.find(cities, function (item) {
         var itemCountry = item.country.toLowerCase();
-        return item.city.toLowerCase() === city && itemCountry === country || itemCountry.startsWith(country);
+        return item.city.toLowerCase() === city && itemCountry === country;
       });
+      if (!zone) {
+        zone = _.find(cities, function (item) {
+          var itemCountry = item.country.toLowerCase();
+          return item.city.toLowerCase() === itemCountry.startsWith(country);
+        });
+      }
+      return zone;
     }
   }]);
 
